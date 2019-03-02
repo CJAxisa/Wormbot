@@ -210,7 +210,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 518251232}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.684, y: -5.19, z: -0.09437339}
+  m_LocalPosition: {x: 8.684, y: -5.19, z: 0}
   m_LocalScale: {x: 40.130062, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -371,7 +371,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1756418285}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.6, y: 26.4, z: 0}
+  m_LocalPosition: {x: 26.6, y: 26.4, z: 13.4}
   m_LocalScale: {x: 87.632774, y: 73.02731, z: 0.8114146}
   m_Children: []
   m_Father: {fileID: 0}
@@ -389,6 +389,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: tempWormBoi
       objectReference: {fileID: 0}
+    - target: {fileID: 3023479951627597290, guid: 494bc1cc8f6b7cf44b6c4efa627f804d,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 3023479951627598359, guid: 494bc1cc8f6b7cf44b6c4efa627f804d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -402,7 +407,7 @@ PrefabInstance:
     - target: {fileID: 3023479951627598359, guid: 494bc1cc8f6b7cf44b6c4efa627f804d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.94
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3023479951627598359, guid: 494bc1cc8f6b7cf44b6c4efa627f804d,
         type: 3}
@@ -444,6 +449,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3023479951627598357, guid: 494bc1cc8f6b7cf44b6c4efa627f804d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3023479951627598353, guid: 494bc1cc8f6b7cf44b6c4efa627f804d,
         type: 3}
       propertyPath: numJumps
@@ -452,7 +462,17 @@ PrefabInstance:
     - target: {fileID: 3023479951627598353, guid: 494bc1cc8f6b7cf44b6c4efa627f804d,
         type: 3}
       propertyPath: jumpVelMultiplier
-      value: 5
+      value: 5.641
+      objectReference: {fileID: 0}
+    - target: {fileID: 3023479951627598353, guid: 494bc1cc8f6b7cf44b6c4efa627f804d,
+        type: 3}
+      propertyPath: grounded
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3023479951627598353, guid: 494bc1cc8f6b7cf44b6c4efa627f804d,
+        type: 3}
+      propertyPath: maxSpeed
+      value: 0.75
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 494bc1cc8f6b7cf44b6c4efa627f804d, type: 3}

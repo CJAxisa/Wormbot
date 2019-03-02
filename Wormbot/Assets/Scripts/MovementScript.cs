@@ -23,7 +23,8 @@ public class MovementScript : MonoBehaviour
         rigidbody = GetComponent<Rigidbody2D>();
         facingLeft = false;
         jumpsLeft = numJumps;
-        distanceToGround = GetComponent<Collider2D>().bounds.extents.y;
+
+        distanceToGround = GetComponent<PolygonCollider2D>().bounds.extents.y;
     }
     
     void Update()
@@ -41,11 +42,16 @@ public class MovementScript : MonoBehaviour
             if (!facingLeft)
                 facingLeft = true;
         }
-        jumpCheck();
+
         groundCheck();
+        jumpCheck();
+
     }
 
 
+    /// <summary>
+    /// Checks for jump input from player.
+    /// </summary>
     private void jumpCheck()
     {
         if (Input.GetMouseButton(0) && jumpsLeft != 0)
@@ -56,26 +62,42 @@ public class MovementScript : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && jumpsLeft != 0)
         {
             jumpVel = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            jumpVel = Vector3.ClampMagnitude(jumpVel, 1f);
+            jumpVel.z = 0f;
+            jumpVel.Normalize();
+
+            //Debug.Log("Original vector: " + (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position) + "\nNormalized Vel: " +jumpVel+"\n");
+
+
             jumpVel *= jumpVelMultiplier;
             rigidbody.velocity = jumpVel;
-            Debug.Log("Worm Launch");
+            
             jumpsLeft--;
             grounded = false;
+
+            
         }
     }
 
+    /// <summary>
+    /// Determines whether or not the player is grounded
+    /// </summary>
     private void groundCheck()
     {
-        //Debug.DrawLine(transform.position, transform.position + new Vector3(0f, distanceToGround * -1.5f),Color.cyan);
+        Debug.DrawLine(transform.position, transform.position + new Vector3(0f, -1f*distanceToGround,0f),Color.cyan);
 
-
-        Ray groundRay = new Ray(transform.position, Vector3.down);
-        if (Physics.Raycast(groundRay,distanceToGround*1.5f))
+        //Ray groundRay = new Ray(transform.position, Vector3.down);
+        RaycastHit2D groundCheckResult = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround+0.1f);
+        if (groundCheckResult && groundCheckResult.collider.gameObject.tag!="Player")
         {
+            
             grounded = true;
             jumpsLeft = numJumps;
-            Debug.Log("i hit the grount");
+            //Debug.Log("i hit the grount");
+        }
+        else
+        {
+            //Debug.Log("did not hit ground");
+            grounded = false;
         }
     }
 
