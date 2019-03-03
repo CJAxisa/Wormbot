@@ -14,9 +14,14 @@ public class MovementScript : MonoBehaviour
     public float jumpVelMultiplier;
     [Range(0f, 5f)]
     public float moveSpeedMultiplier;
+    [Range(0f, 3f)]
+    public float maxWalkSpeed;
     public bool facingLeft;
     public bool grounded;
     public int numJumps;
+
+    LayerMask lm;
+    private Vector2 walkVelocity;
 
     void Start()
     {
@@ -25,23 +30,38 @@ public class MovementScript : MonoBehaviour
         jumpsLeft = numJumps;
 
         distanceToGround = GetComponent<PolygonCollider2D>().bounds.extents.y;
+        lm = LayerMask.GetMask("Ground");
+
     }
-    
+
     void Update()
     {
         if (Input.GetKey("d") && !Input.GetKey("a")) 
         {
-            rigidbody.velocity = new Vector2(1f*moveSpeedMultiplier, 0f);
+            walkVelocity = new Vector2(1f*moveSpeedMultiplier, 0f);
             if (facingLeft)
                 facingLeft = false;
         }
         else if (Input.GetKey("a") && !Input.GetKey("d"))
         {
             //rigidbody.AddForce(new Vector2((Mathf.Sin(wormyMotionTimer++) + 1f) * -5f, 0));
-            rigidbody.velocity = new Vector2(-1f*moveSpeedMultiplier, 0f);
+            walkVelocity = new Vector2(-1f*moveSpeedMultiplier, 0f);
             if (!facingLeft)
                 facingLeft = true;
         }
+        else
+        {
+            walkVelocity = Vector2.zero;
+        }
+
+
+        if (walkVelocity.x > maxWalkSpeed)
+            walkVelocity = new Vector2(maxWalkSpeed,0f);
+        else if (walkVelocity.x < -1f*maxWalkSpeed)
+            walkVelocity = new Vector2(-1f*maxWalkSpeed, 0f);
+
+        if(Mathf.Abs(rigidbody.velocity.x)<maxWalkSpeed)
+            rigidbody.velocity += walkVelocity;
 
         groundCheck();
         jumpCheck();
@@ -86,7 +106,7 @@ public class MovementScript : MonoBehaviour
         Debug.DrawLine(transform.position, transform.position + new Vector3(0f, -1f*distanceToGround,0f),Color.cyan);
 
         //Ray groundRay = new Ray(transform.position, Vector3.down);
-        RaycastHit2D groundCheckResult = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround+0.1f);
+        RaycastHit2D groundCheckResult = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround+0.1f,lm);
         if (groundCheckResult && groundCheckResult.collider.gameObject.tag!="Player")
         {
             

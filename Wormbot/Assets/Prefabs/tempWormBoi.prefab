@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3023479951627598358}
   m_Layer: 0
   m_Name: tempWormBoi
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,10 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fc1c0c8045a1714bb99d4e356ed99b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpVelMultiplier: 5.35
-  moveSpeedMultiplier: 1
+  jumpVelMultiplier: 5.641
+  moveSpeedMultiplier: 0.28
+  maxWalkSpeed: 2.87
   facingLeft: 0
-  numJumps: 2
+  grounded: 0
+  numJumps: 1
 --- !u!212 &3023479951627598356
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -150,4 +152,4 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
