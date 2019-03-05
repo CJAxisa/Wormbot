@@ -320,6 +320,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &881633264 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3023479951627598359, guid: 494bc1cc8f6b7cf44b6c4efa627f804d,
+    type: 3}
+  m_PrefabInstance: {fileID: 3023479951255941653}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1611385676
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,6 +441,7 @@ GameObject:
   - component: {fileID: 1706316851}
   - component: {fileID: 1706316850}
   - component: {fileID: 1706316849}
+  - component: {fileID: 1706316852}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -506,6 +513,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1706316852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706316848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e59aa33979387d14896d713258d7d14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followTarget: {fileID: 881633264}
+  safeZoneRatios: {x: 0.15, y: 0.5}
+  stageBounds: {x: 0, y: 0, z: 0, w: 0}
+  followVelocity: 0.01
+  debugOverlay: 0
 --- !u!1 &1756418285
 GameObject:
   m_ObjectHideFlags: 0
