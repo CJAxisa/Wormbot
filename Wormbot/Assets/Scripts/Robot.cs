@@ -13,8 +13,11 @@ public class Robot : MonoBehaviour
     public float maxWalkSpeed;
     public bool facingLeft;
     public int walkDist;
+    public float attackDelay;
+    private float attackTimer;
     private int distMoved;
     public int direct;
+    public GameObject bullet;
 
     LayerMask lm;
     public Vector2 walkVelocity;
@@ -28,6 +31,7 @@ public class Robot : MonoBehaviour
         walkDist = 150;
         maxWalkSpeed = 0.5f;
         moveSpeedMultiplier = 1f;
+        attackTimer = attackDelay;
 
         lm = LayerMask.GetMask("Ground");
     }
@@ -67,5 +71,19 @@ public class Robot : MonoBehaviour
         if (Mathf.Abs(rigidbody.velocity.x) < maxWalkSpeed)
             rigidbody.velocity += walkVelocity;
 
+        // attack at set intervals
+        if (attackTimer <= 0)
+        {
+            GameObject newBullet = Instantiate(bullet, new Vector3(this.transform.position.x, this.transform.position.y, 0), Quaternion.identity);
+            if (!facingLeft)
+            {
+                newBullet.GetComponent<Bullet>().setVelocityRight();
+            }
+
+            attackTimer = attackDelay;
+        }
+        else {
+            attackTimer -= Time.deltaTime;
+        }
     }
 }
