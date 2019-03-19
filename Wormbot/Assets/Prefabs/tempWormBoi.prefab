@@ -47,7 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fc1c0c8045a1714bb99d4e356ed99b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpVelMultiplier: 5.641
   jumpVelMultiplier: 1.25
   moveSpeedMultiplier: 0.28
   maxWalkSpeed: 2.87
@@ -154,7 +153,6 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
   m_Constraints: 0
 --- !u!114 &665527498
 MonoBehaviour:
