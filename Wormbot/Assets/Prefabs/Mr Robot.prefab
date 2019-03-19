@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 6246928192152040858}
   - component: {fileID: 6246928192152040837}
   - component: {fileID: 6246928192152040836}
+  - component: {fileID: 1303478466}
   m_Layer: 0
   m_Name: Mr Robot
-  m_TagString: Untagged
+  m_TagString: CanCapture
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -139,9 +140,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c291806bf0603479ab0a8421dc275a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeedMultiplier: 0
-  maxWalkSpeed: 0
+  moveSpeedMultiplier: 1
+  maxWalkSpeed: 0.954
   facingLeft: 0
-  walkDist: 0
+  walkDist: 5
   direct: 0
   walkVelocity: {x: 0, y: 0}
+--- !u!114 &1303478466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6246928192152040839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f828373eeaba64abd397a43c961e5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpVelMult: 2
+  maxMoveSpeed: 1
+  numJumps: 10

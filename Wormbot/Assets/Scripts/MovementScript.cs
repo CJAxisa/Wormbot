@@ -10,24 +10,30 @@ public class MovementScript : MonoBehaviour
     private int jumpsLeft;
     private float distanceToGround;
 
-    [Range(0f,15f)]
+    [Range(0f, 15f)]
     public float jumpVelMultiplier;
     [Range(0f, 5f)]
     public float moveSpeedMultiplier;
-    [Range(0f, 3f)]
+    //[Range(0f, 3f)]
     public float maxWalkSpeed;
     public bool facingLeft;
     public bool grounded;
+    public bool captured;
     public int numJumps;
+
+
 
     LayerMask lm;
     private Vector2 walkVelocity;
+
+
 
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
         facingLeft = false;
         jumpsLeft = numJumps;
+        captured = false;
 
         distanceToGround = GetComponent<PolygonCollider2D>().bounds.extents.y;
         lm = LayerMask.GetMask("Ground");
@@ -36,16 +42,16 @@ public class MovementScript : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey("d") && !Input.GetKey("a")) 
+        if (Input.GetKey("d") && !Input.GetKey("a"))
         {
-            walkVelocity = new Vector2(1f*moveSpeedMultiplier, 0f);
+            walkVelocity = new Vector2(1f * moveSpeedMultiplier, 0f);
             if (facingLeft)
                 facingLeft = false;
         }
         else if (Input.GetKey("a") && !Input.GetKey("d"))
         {
             //rigidbody.AddForce(new Vector2((Mathf.Sin(wormyMotionTimer++) + 1f) * -5f, 0));
-            walkVelocity = new Vector2(-1f*moveSpeedMultiplier, 0f);
+            walkVelocity = new Vector2(-1f * moveSpeedMultiplier, 0f);
             if (!facingLeft)
                 facingLeft = true;
         }
@@ -56,16 +62,16 @@ public class MovementScript : MonoBehaviour
 
 
         if (walkVelocity.x > maxWalkSpeed)
-            walkVelocity = new Vector2(maxWalkSpeed,0f);
-        else if (walkVelocity.x < -1f*maxWalkSpeed)
-            walkVelocity = new Vector2(-1f*maxWalkSpeed, 0f);
+            walkVelocity = new Vector2(maxWalkSpeed, 0f);
+        else if (walkVelocity.x < -1f * maxWalkSpeed)
+            walkVelocity = new Vector2(-1f * maxWalkSpeed, 0f);
 
-        if(Mathf.Abs(rigidbody.velocity.x)<maxWalkSpeed)
+        if (Mathf.Abs(rigidbody.velocity.x) < maxWalkSpeed)
             rigidbody.velocity += walkVelocity;
 
         groundCheck();
         jumpCheck();
-
+        captureCheck();
     }
 
 
@@ -74,6 +80,7 @@ public class MovementScript : MonoBehaviour
     /// </summary>
     private void jumpCheck()
     {
+
         if (Input.GetMouseButton(0) && jumpsLeft != 0)
         {
             Debug.DrawLine(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.cyan);
@@ -83,18 +90,20 @@ public class MovementScript : MonoBehaviour
         {
             jumpVel = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             jumpVel.z = 0f;
-            jumpVel.Normalize();
-
+            //jumpVel.Normalize();
             //Debug.Log("Original vector: " + (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position) + "\nNormalized Vel: " +jumpVel+"\n");
-
+            if (jumpVel.magnitude >= maxWalkSpeed * 3.5f)
+            {
+                jumpVel=Vector3.ClampMagnitude(jumpVel, maxWalkSpeed * 3.45f);
+            }
 
             jumpVel *= jumpVelMultiplier;
             rigidbody.velocity = jumpVel;
-            
+
             jumpsLeft--;
             grounded = false;
 
-            
+
         }
     }
 
@@ -103,13 +112,13 @@ public class MovementScript : MonoBehaviour
     /// </summary>
     private void groundCheck()
     {
-        Debug.DrawLine(transform.position, transform.position + new Vector3(0f, -1f*distanceToGround,0f),Color.cyan);
+        Debug.DrawLine(transform.position, transform.position + new Vector3(0f, -1f * distanceToGround, 0f), Color.cyan);
 
         //Ray groundRay = new Ray(transform.position, Vector3.down);
-        RaycastHit2D groundCheckResult = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround+0.1f,lm);
-        if (groundCheckResult && groundCheckResult.collider.gameObject.tag!="Player")
+        RaycastHit2D groundCheckResult = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround + 0.1f, lm);
+        if (groundCheckResult && groundCheckResult.collider.gameObject.tag != "Player")
         {
-            
+
             grounded = true;
             jumpsLeft = numJumps;
             //Debug.Log("i hit the grount");
@@ -118,6 +127,32 @@ public class MovementScript : MonoBehaviour
         {
             //Debug.Log("did not hit ground");
             grounded = false;
+        }
+    }
+
+
+    /// <summary>
+    /// Checks for player input to capture.
+    /// If Capture button pressed, check for Enemy that can be captured.
+    /// If both, set players movement stats to that of Enemy.
+    /// </summary>
+    private void captureCheck()
+    {
+        RaycastHit2D circCheck = Physics2D.CircleCast(transform.position, gameObject.GetComponent<PolygonCollider2D>().bounds.size.x*2f, Vector2.zero, 0f);
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (captured)
+            {
+
+            }
+            if( circCheck   && circCheck.collider.tag=="CanCapture")
+            {
+                Debug.Log("Captured fhella");
+                MovementStats newStats = circCheck.collider.gameObject.GetComponent<MovementStats>();
+                jumpVelMultiplier = newStats.jumpVelMult;
+                maxWalkSpeed = newStats.maxMoveSpeed;
+                numJumps = newStats.numJumps;
+            }
         }
     }
 
