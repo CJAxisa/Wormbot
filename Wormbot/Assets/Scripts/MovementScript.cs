@@ -171,6 +171,7 @@ public class MovementScript : MonoBehaviour
                         transTarget = hit.collider.gameObject;
                         transTarget.GetComponent<Rigidbody2D>().simulated = false;
                         gameObject.GetComponent<SpriteRenderer>().sprite = transTarget.GetComponent<SpriteRenderer>().sprite;
+                        //gameObject.GetComponent<BoxCollider2D>().autoTiling
                         transTarget.GetComponent<SpriteRenderer>().enabled = false;
                     }
             }
