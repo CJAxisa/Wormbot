@@ -19,9 +19,14 @@ public class MovementScript : MonoBehaviour
     public bool facingLeft;
     public bool grounded;
     public bool captured;
+    public bool capturing;
+    public bool ejecting;
     public int numJumps;
 
 
+    private const int CAPTURE_FRAMES = 60;
+    private int captureFramesLeft=0;
+    private GameObject transTarget;
 
     LayerMask lm;
     private Vector2 walkVelocity;
@@ -35,7 +40,7 @@ public class MovementScript : MonoBehaviour
         jumpsLeft = numJumps;
         captured = false;
 
-        distanceToGround = GetComponent<PolygonCollider2D>().bounds.extents.y;
+        distanceToGround = GetComponent<BoxCollider2D>().bounds.extents.y;
         lm = LayerMask.GetMask("Ground");
 
     }
@@ -98,6 +103,14 @@ public class MovementScript : MonoBehaviour
             }
 
             jumpVel *= jumpVelMultiplier;
+
+            if (ejecting)
+            {
+                jumpVel *= 1.5f;
+                ejecting = false;
+                setMovementStats(gameObject.GetComponent<MovementStats>());
+            }
+
             rigidbody.velocity = jumpVel;
 
             jumpsLeft--;
@@ -138,22 +151,51 @@ public class MovementScript : MonoBehaviour
     /// </summary>
     private void captureCheck()
     {
-        RaycastHit2D circCheck = Physics2D.CircleCast(transform.position, gameObject.GetComponent<PolygonCollider2D>().bounds.size.x*2f, Vector2.zero, 0f);
-        if (Input.GetKeyDown(KeyCode.E))
+        RaycastHit2D[] circCheck = Physics2D.CircleCastAll(transform.position, gameObject.GetComponent<BoxCollider2D>().bounds.size.x*2f, Vector2.zero, 0f);
+        if (Input.GetKey(KeyCode.E))
         {
             if (captured)
             {
-
+                captured = false;
+                ejecting = true;
             }
-            if( circCheck   && circCheck.collider.tag=="CanCapture")
+            else
             {
-                Debug.Log("Captured fhella");
-                MovementStats newStats = circCheck.collider.gameObject.GetComponent<MovementStats>();
-                jumpVelMultiplier = newStats.jumpVelMult;
-                maxWalkSpeed = newStats.maxMoveSpeed;
-                numJumps = newStats.numJumps;
+                foreach (RaycastHit2D hit in circCheck)
+                    if (hit && hit.collider.tag == "CanCapture" && !captured)
+                    {
+                        Debug.Log("Captured fhella");
+                        setMovementStats(hit.collider.gameObject.GetComponent<MovementStats>());
+                        capturing = true;
+                        captureFramesLeft = CAPTURE_FRAMES;
+                        transTarget = hit.collider.gameObject;
+                        transTarget.GetComponent<Rigidbody2D>().simulated = false;
+                        gameObject.GetComponent<SpriteRenderer>().sprite = transTarget.GetComponent<SpriteRenderer>().sprite;
+                        transTarget.GetComponent<SpriteRenderer>().enabled = false;
+                    }
             }
+            
         }
+
+        if(capturing&&captureFramesLeft>0)
+        {
+            rigidbody.velocity = (transTarget.transform.position - transform.position);
+            captureFramesLeft--;
+        }
+        else if(capturing&&captureFramesLeft==0)
+        {
+            capturing = false;
+            captured = true;
+        }
+
+
+    }
+
+    private void setMovementStats(MovementStats newStats)
+    {
+        jumpVelMultiplier = newStats.jumpVelMult;
+        maxWalkSpeed = newStats.maxMoveSpeed;
+        numJumps = newStats.numJumps;
     }
 
 }
