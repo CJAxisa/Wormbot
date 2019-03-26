@@ -40,7 +40,7 @@ public class MovementScript : MonoBehaviour
         jumpsLeft = numJumps;
         captured = false;
 
-        distanceToGround = GetComponent<PolygonCollider2D>().bounds.extents.y;
+        distanceToGround = GetComponent<BoxCollider2D>().bounds.extents.y;
         lm = LayerMask.GetMask("Ground");
 
     }
@@ -151,7 +151,7 @@ public class MovementScript : MonoBehaviour
     /// </summary>
     private void captureCheck()
     {
-        RaycastHit2D[] circCheck = Physics2D.CircleCastAll(transform.position, gameObject.GetComponent<PolygonCollider2D>().bounds.size.x*2f, Vector2.zero, 0f);
+        RaycastHit2D[] circCheck = Physics2D.CircleCastAll(transform.position, gameObject.GetComponent<BoxCollider2D>().bounds.size.x*2f, Vector2.zero, 0f);
         if (Input.GetKey(KeyCode.E))
         {
             if (captured)
