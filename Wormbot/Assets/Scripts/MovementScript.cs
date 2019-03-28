@@ -5,6 +5,7 @@ using UnityEngine;
 public class MovementScript : MonoBehaviour
 {
     private new Rigidbody2D rigidbody;
+    private Animator animator;
     private float wormyMotionTimer;
     private Vector3 jumpVel;
     private int jumpsLeft;
@@ -23,7 +24,6 @@ public class MovementScript : MonoBehaviour
     public bool ejecting;
     public int numJumps;
 
-
     private const int CAPTURE_FRAMES = 60;
     private int captureFramesLeft=0;
     private GameObject transTarget;
@@ -36,6 +36,7 @@ public class MovementScript : MonoBehaviour
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         facingLeft = false;
         jumpsLeft = numJumps;
         captured = false;
@@ -43,6 +44,9 @@ public class MovementScript : MonoBehaviour
         distanceToGround = GetComponent<BoxCollider2D>().bounds.extents.y;
         lm = LayerMask.GetMask("Ground");
 
+        animator.SetTrigger("prepairingToJump");
+        animator.SetTrigger("jumping");
+        animator.SetTrigger("landed");
     }
 
     void Update()
@@ -77,6 +81,9 @@ public class MovementScript : MonoBehaviour
         groundCheck();
         jumpCheck();
         captureCheck();
+
+        animator.SetBool("facingLeft", facingLeft);
+        animator.SetBool("grounded", grounded);
     }
 
 
@@ -89,6 +96,7 @@ public class MovementScript : MonoBehaviour
         if (Input.GetMouseButton(0) && jumpsLeft != 0)
         {
             Debug.DrawLine(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.cyan);
+            animator.SetTrigger("prepJump");
         }
 
         if (Input.GetMouseButtonUp(0) && jumpsLeft != 0)
@@ -116,7 +124,7 @@ public class MovementScript : MonoBehaviour
             jumpsLeft--;
             grounded = false;
 
-
+            animator.SetTrigger("jump");
         }
     }
 
@@ -131,7 +139,6 @@ public class MovementScript : MonoBehaviour
         RaycastHit2D groundCheckResult = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround + 0.1f, lm);
         if (groundCheckResult && groundCheckResult.collider.gameObject.tag != "Player")
         {
-
             grounded = true;
             jumpsLeft = numJumps;
             //Debug.Log("i hit the grount");
