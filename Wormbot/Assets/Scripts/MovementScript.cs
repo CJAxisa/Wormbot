@@ -30,6 +30,12 @@ public class MovementScript : MonoBehaviour
 
     LayerMask lm;
     private Vector2 walkVelocity;
+    private Sprite startingSprite;
+    private Vector2 startingScale;
+
+    private Vector2 startingColliderSize;
+    private Vector2 startingColliderOffset;
+
 
 
 
@@ -47,6 +53,18 @@ public class MovementScript : MonoBehaviour
         animator.SetTrigger("prepairingToJump");
         animator.SetTrigger("jumping");
         animator.SetTrigger("landed");
+        startingSprite = gameObject.GetComponent<SpriteRenderer>().sprite;
+        startingScale = transform.lossyScale;
+        
+        //
+
+        setMovementStats(gameObject.GetComponent<MovementStats>());
+        startingColliderSize = gameObject.GetComponent<BoxCollider2D>().size;
+        startingColliderOffset = gameObject.GetComponent<BoxCollider2D>().offset; 
+
+
+
+
     }
 
     void Update()
@@ -103,7 +121,16 @@ public class MovementScript : MonoBehaviour
         {
             jumpVel = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             jumpVel.z = 0f;
-            //jumpVel.Normalize();
+            if (jumpVel.magnitude > 6f)
+            {
+                jumpVel.Normalize();
+                jumpVel *= 6f;
+            }
+            else if (jumpVel.magnitude < 1f)
+            {
+                jumpVel.Normalize();
+            }
+
             //Debug.Log("Original vector: " + (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position) + "\nNormalized Vel: " +jumpVel+"\n");
             if (jumpVel.magnitude >= maxWalkSpeed * 3.5f)
             {
@@ -117,6 +144,11 @@ public class MovementScript : MonoBehaviour
                 jumpVel *= 1.5f;
                 ejecting = false;
                 setMovementStats(gameObject.GetComponent<MovementStats>());
+                gameObject.GetComponent<SpriteRenderer>().sprite = startingSprite;
+
+                gameObject.GetComponent<BoxCollider2D>().size = startingColliderSize;
+                gameObject.GetComponent<BoxCollider2D>().offset = startingColliderOffset;
+                distanceToGround = GetComponent<BoxCollider2D>().bounds.extents.y;
             }
 
             rigidbody.velocity = jumpVel;
@@ -178,8 +210,14 @@ public class MovementScript : MonoBehaviour
                         transTarget = hit.collider.gameObject;
                         transTarget.GetComponent<Rigidbody2D>().simulated = false;
                         gameObject.GetComponent<SpriteRenderer>().sprite = transTarget.GetComponent<SpriteRenderer>().sprite;
+                        transform.localScale = transTarget.transform.localScale;
                         //gameObject.GetComponent<BoxCollider2D>().autoTiling
                         transTarget.GetComponent<SpriteRenderer>().enabled = false;
+
+
+                        gameObject.GetComponent<BoxCollider2D>().size = transTarget.GetComponent<BoxCollider2D>().size;
+                        gameObject.GetComponent<BoxCollider2D>().offset = transTarget.GetComponent<BoxCollider2D>().offset;
+                        distanceToGround = gameObject.GetComponent<BoxCollider2D>().bounds.extents.y;
                     }
             }
             
