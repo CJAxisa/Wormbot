@@ -22659,11 +22659,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6246928192152040837, guid: b0246413f6eaeed42a4905a311701b08,
-        type: 3}
-      propertyPath: m_Constraints
-      value: 4
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b0246413f6eaeed42a4905a311701b08, type: 3}
 --- !u!1001 &1530398277
@@ -22790,11 +22785,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: tempWormBoi
       objectReference: {fileID: 0}
-    - target: {fileID: 7146172220009013998, guid: 3a72e6b72d5f5b6438addcefba9858a0,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7146172219527040744, guid: 3a72e6b72d5f5b6438addcefba9858a0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -22849,26 +22839,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7146172220009013987, guid: 3a72e6b72d5f5b6438addcefba9858a0,
-        type: 3}
-      propertyPath: m_Constraints
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7146172220009013986, guid: 3a72e6b72d5f5b6438addcefba9858a0,
-        type: 3}
-      propertyPath: numJumps
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7146172220009013986, guid: 3a72e6b72d5f5b6438addcefba9858a0,
-        type: 3}
-      propertyPath: jumpVelMult
-      value: 3.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 7146172220009013986, guid: 3a72e6b72d5f5b6438addcefba9858a0,
-        type: 3}
-      propertyPath: maxMoveSpeed
-      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a72e6b72d5f5b6438addcefba9858a0, type: 3}
