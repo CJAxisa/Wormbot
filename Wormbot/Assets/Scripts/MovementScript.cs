@@ -5,6 +5,7 @@ using UnityEngine;
 public class MovementScript : MonoBehaviour
 {
     private new Rigidbody2D rigidbody;
+    private Animator animator;
     private float wormyMotionTimer;
     private Vector3 jumpVel;
     private int jumpsLeft;
@@ -23,25 +24,46 @@ public class MovementScript : MonoBehaviour
     public bool ejecting;
     public int numJumps;
 
-
     private const int CAPTURE_FRAMES = 60;
     private int captureFramesLeft=0;
     private GameObject transTarget;
 
     LayerMask lm;
     private Vector2 walkVelocity;
+    private Sprite startingSprite;
+    private Vector2 startingScale;
+
+    private Vector2 startingColliderSize;
+    private Vector2 startingColliderOffset;
+
 
 
 
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         facingLeft = false;
         jumpsLeft = numJumps;
         captured = false;
 
         distanceToGround = GetComponent<BoxCollider2D>().bounds.extents.y;
         lm = LayerMask.GetMask("Ground");
+
+        animator.SetTrigger("prepairingToJump");
+        animator.SetTrigger("jumping");
+        animator.SetTrigger("landed");
+        startingSprite = gameObject.GetComponent<SpriteRenderer>().sprite;
+        startingScale = transform.lossyScale;
+        
+        //
+
+        setMovementStats(gameObject.GetComponent<MovementStats>());
+        startingColliderSize = gameObject.GetComponent<BoxCollider2D>().size;
+        startingColliderOffset = gameObject.GetComponent<BoxCollider2D>().offset; 
+
+
+
 
     }
 
@@ -77,6 +99,9 @@ public class MovementScript : MonoBehaviour
         groundCheck();
         jumpCheck();
         captureCheck();
+
+        animator.SetBool("facingLeft", facingLeft);
+        animator.SetBool("grounded", grounded);
     }
 
 
@@ -89,13 +114,23 @@ public class MovementScript : MonoBehaviour
         if (Input.GetMouseButton(0) && jumpsLeft != 0)
         {
             Debug.DrawLine(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.cyan);
+            animator.SetTrigger("prepJump");
         }
 
         if (Input.GetMouseButtonUp(0) && jumpsLeft != 0)
         {
             jumpVel = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             jumpVel.z = 0f;
-            //jumpVel.Normalize();
+            if (jumpVel.magnitude > 6f)
+            {
+                jumpVel.Normalize();
+                jumpVel *= 6f;
+            }
+            else if (jumpVel.magnitude < 1f)
+            {
+                jumpVel.Normalize();
+            }
+
             //Debug.Log("Original vector: " + (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position) + "\nNormalized Vel: " +jumpVel+"\n");
             if (jumpVel.magnitude >= maxWalkSpeed * 3.5f)
             {
@@ -109,6 +144,11 @@ public class MovementScript : MonoBehaviour
                 jumpVel *= 1.5f;
                 ejecting = false;
                 setMovementStats(gameObject.GetComponent<MovementStats>());
+                gameObject.GetComponent<SpriteRenderer>().sprite = startingSprite;
+
+                gameObject.GetComponent<BoxCollider2D>().size = startingColliderSize;
+                gameObject.GetComponent<BoxCollider2D>().offset = startingColliderOffset;
+                distanceToGround = GetComponent<BoxCollider2D>().bounds.extents.y;
             }
 
             rigidbody.velocity = jumpVel;
@@ -116,7 +156,7 @@ public class MovementScript : MonoBehaviour
             jumpsLeft--;
             grounded = false;
 
-
+            animator.SetTrigger("jump");
         }
     }
 
@@ -131,7 +171,6 @@ public class MovementScript : MonoBehaviour
         RaycastHit2D groundCheckResult = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround + 0.1f, lm);
         if (groundCheckResult && groundCheckResult.collider.gameObject.tag != "Player")
         {
-
             grounded = true;
             jumpsLeft = numJumps;
             //Debug.Log("i hit the grount");
@@ -171,7 +210,14 @@ public class MovementScript : MonoBehaviour
                         transTarget = hit.collider.gameObject;
                         transTarget.GetComponent<Rigidbody2D>().simulated = false;
                         gameObject.GetComponent<SpriteRenderer>().sprite = transTarget.GetComponent<SpriteRenderer>().sprite;
+                        transform.localScale = transTarget.transform.localScale;
+                        //gameObject.GetComponent<BoxCollider2D>().autoTiling
                         transTarget.GetComponent<SpriteRenderer>().enabled = false;
+
+
+                        gameObject.GetComponent<BoxCollider2D>().size = transTarget.GetComponent<BoxCollider2D>().size;
+                        gameObject.GetComponent<BoxCollider2D>().offset = transTarget.GetComponent<BoxCollider2D>().offset;
+                        distanceToGround = gameObject.GetComponent<BoxCollider2D>().bounds.extents.y;
                     }
             }
             
