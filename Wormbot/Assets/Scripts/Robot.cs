@@ -7,7 +7,6 @@ public class Robot : MonoBehaviour
 
     private new Rigidbody2D rigidbody;
     private float wormyMotionTimer;
-    private Vector3 toWorm;
 
     public float moveSpeedMultiplier;
     [Range(0f, 3f)]
@@ -19,9 +18,6 @@ public class Robot : MonoBehaviour
     private int distMoved;
     public int direct;
     public GameObject bullet;
-    public GameObject worm;
-    public float bulletSpeed;
-    public float visionRange;
 
     LayerMask lm;
     public Vector2 walkVelocity;
@@ -75,22 +71,14 @@ public class Robot : MonoBehaviour
         if (Mathf.Abs(rigidbody.velocity.x) < maxWalkSpeed)
             rigidbody.velocity += walkVelocity;
 
-        toWorm = worm.transform.position - this.transform.position;
-        toWorm = toWorm.normalized;
-        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, toWorm, visionRange);
-        //Debug.DrawLine(worm.transform.position, this.transform.position);
-        if (hit == true && hit.collider.tag == "Player") // robot targeting, red is in range, green is out of range
-        {
-            Debug.DrawLine(this.transform.position, (visionRange * toWorm) + this.transform.position, Color.red);
-        }
-        else {
-            Debug.DrawLine(this.transform.position, (visionRange * toWorm) + this.transform.position, Color.green);
-        }
         // attack at set intervals
-        if (attackTimer <= 0 && hit == true && hit.collider.tag == "Player")
+        if (attackTimer <= 0)
         {
             GameObject newBullet = Instantiate(bullet, new Vector3(this.transform.position.x, this.transform.position.y, 0), Quaternion.identity);
-            newBullet.GetComponent<Bullet>().velocity = bulletSpeed * toWorm;
+            if (!facingLeft)
+            {
+                newBullet.GetComponent<Bullet>().setVelocityRight();
+            }
 
             attackTimer = attackDelay;
         }

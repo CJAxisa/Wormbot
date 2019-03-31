@@ -98,12 +98,7 @@ MonoBehaviour:
   maxWalkSpeed: 0.954
   facingLeft: 0
   walkDist: 5
-  attackDelay: 5
   direct: 0
-  bullet: {fileID: 8196605169974533054, guid: c137bb3466b01d242a2bad875b82d29e, type: 3}
-  worm: {fileID: 0}
-  bulletSpeed: 3
-  visionRange: 10
   walkVelocity: {x: 0, y: 0}
 --- !u!114 &1303478466
 MonoBehaviour:
