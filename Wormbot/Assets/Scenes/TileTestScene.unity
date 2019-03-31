@@ -22442,6 +22442,15 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+<<<<<<< HEAD
+=======
+--- !u!1 &429101117 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7146172220009013998, guid: 3a72e6b72d5f5b6438addcefba9858a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 7146172219667101288}
+  m_PrefabAsset: {fileID: 0}
+>>>>>>> parent of 1a2e0a4... Merge branch 'master' into Dillon
 --- !u!4 &430520448 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7146172219527040744, guid: 3a72e6b72d5f5b6438addcefba9858a0,
@@ -22604,6 +22613,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mr Robot
       objectReference: {fileID: 0}
+<<<<<<< HEAD
+=======
+    - target: {fileID: 6246928192152040839, guid: b0246413f6eaeed42a4905a311701b08,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+>>>>>>> parent of 1a2e0a4... Merge branch 'master' into Dillon
     - target: {fileID: 6246928192152040857, guid: b0246413f6eaeed42a4905a311701b08,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -22659,6 +22676,19 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+<<<<<<< HEAD
+=======
+    - target: {fileID: 6246928192152040836, guid: b0246413f6eaeed42a4905a311701b08,
+        type: 3}
+      propertyPath: worm
+      value: 
+      objectReference: {fileID: 429101117}
+    - target: {fileID: 6246928192152040836, guid: b0246413f6eaeed42a4905a311701b08,
+        type: 3}
+      propertyPath: visionRange
+      value: 5
+      objectReference: {fileID: 0}
+>>>>>>> parent of 1a2e0a4... Merge branch 'master' into Dillon
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b0246413f6eaeed42a4905a311701b08, type: 3}
 --- !u!1001 &1530398277
@@ -22771,6 +22801,14 @@ PrefabInstance:
       propertyPath: jumpVelMult
       value: 1.24
       objectReference: {fileID: 0}
+<<<<<<< HEAD
+=======
+    - target: {fileID: 6246928192152040836, guid: b0246413f6eaeed42a4905a311701b08,
+        type: 3}
+      propertyPath: worm
+      value: 
+      objectReference: {fileID: 429101117}
+>>>>>>> parent of 1a2e0a4... Merge branch 'master' into Dillon
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b0246413f6eaeed42a4905a311701b08, type: 3}
 --- !u!1001 &7146172219667101288
