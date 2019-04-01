@@ -19,7 +19,7 @@ public class Robot : MonoBehaviour
     private int distMoved;
     public int direct;
     public GameObject bullet;
-    public GameObject worm;
+    private GameObject worm;
     public float bulletSpeed;
     public float visionRange;
 
@@ -38,6 +38,7 @@ public class Robot : MonoBehaviour
         attackTimer = attackDelay;
 
         lm = LayerMask.GetMask("Ground");
+        worm = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void Update()
@@ -89,8 +90,9 @@ public class Robot : MonoBehaviour
         if (attackTimer <= 0 && hit == true && hit.collider.tag == "Player")
         {
             GameObject newBullet = Instantiate(bullet, new Vector3(this.transform.position.x, this.transform.position.y, 0), Quaternion.identity);
-            newBullet.GetComponent<Bullet>().velocity = bulletSpeed * toWorm;
-
+            Bullet bulletBullet = newBullet.GetComponent<Bullet>();
+            bulletBullet.velocity = bulletSpeed * toWorm;
+            bulletBullet.worm = this.worm;
             attackTimer = attackDelay;
         }
         else {

@@ -5,12 +5,18 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public Vector3 velocity;
-    public float lifeSpan;
-    private float lifetime;
+    public GameObject worm; // the worm
+    public float lifeSpan; // time bullet exists in seconds before it times out
+    private float lifetime; // current life in seconds of the bullet
+    private Vector3 toWorm; // direction vector to the worm
+    private float rad; // radius of the bullet
+    LayerMask lm;
     // Start is called before the first frame update
     void Start()
     {
         lifetime = 0;
+        lm = LayerMask.GetMask("Ground");
+        rad = this.GetComponent<CircleCollider2D>().radius;
     }
 
     public void setVelocityRight() {
@@ -24,5 +30,18 @@ public class Bullet : MonoBehaviour
         lifetime += Time.deltaTime;
         if (lifetime >= lifeSpan)
             Destroy(this.gameObject);
+
+        // worm collision
+        toWorm = worm.transform.position - this.transform.position;
+        toWorm = toWorm.normalized;
+        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, toWorm, rad);
+        Debug.DrawLine(this.transform.position, (0.16f * toWorm) + this.transform.position, Color.white);
+        if (hit == true && hit.collider.tag == "Player") {
+            Destroy(this.gameObject);
+        }
+
+        // terrain collision
+
+
     }
 }
