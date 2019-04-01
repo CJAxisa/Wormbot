@@ -22,6 +22,7 @@ public class Robot : MonoBehaviour
     private GameObject worm;
     public float bulletSpeed;
     public float visionRange;
+    public bool captured;
 
     LayerMask lm;
     public Vector2 walkVelocity;
@@ -35,7 +36,8 @@ public class Robot : MonoBehaviour
         walkDist = 150;
         maxWalkSpeed = 0.5f;
         moveSpeedMultiplier = 1f;
-        attackTimer = attackDelay;
+        attackTimer = 0;
+        captured = false;
 
         lm = LayerMask.GetMask("Ground");
         worm = GameObject.FindGameObjectWithTag("Player");
@@ -78,25 +80,38 @@ public class Robot : MonoBehaviour
 
         toWorm = worm.transform.position - this.transform.position;
         toWorm = toWorm.normalized;
-        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, toWorm, visionRange);
-        if (hit == true && hit.collider.tag == "Player")
-        { // robot targeting, red is in range, green is out of range
-            Debug.DrawLine(this.transform.position, (visionRange * toWorm) + this.transform.position, Color.red);
-        }
-        else {
-            Debug.DrawLine(this.transform.position, (visionRange * toWorm) + this.transform.position, Color.green); 
-        }
-        // attack at set intervals
-        if (attackTimer <= 0 && hit == true && hit.collider.tag == "Player")
+        bool hitsWorm = false;
+        if (!captured)
         {
-            GameObject newBullet = Instantiate(bullet, new Vector3(this.transform.position.x, this.transform.position.y, 0), Quaternion.identity);
-            Bullet bulletBullet = newBullet.GetComponent<Bullet>();
-            bulletBullet.velocity = bulletSpeed * toWorm;
-            bulletBullet.worm = this.worm;
-            attackTimer = attackDelay;
-        }
-        else {
-            attackTimer -= Time.deltaTime;
+            RaycastHit2D[] hit = Physics2D.RaycastAll(this.transform.position, toWorm, visionRange);
+            foreach (RaycastHit2D targetHit in hit)
+            {
+                if (targetHit.collider.tag == "Player")
+                {
+                    hitsWorm = true;
+                }
+            }
+            if (hitsWorm)
+            { // robot targeting, red is in range, green is out of range
+                Debug.DrawLine(this.transform.position, (visionRange * toWorm) + this.transform.position, Color.red);
+            }
+            else
+            {
+                Debug.DrawLine(this.transform.position, (visionRange * toWorm) + this.transform.position, Color.green);
+            }
+            // attack at set intervals
+            if (attackTimer <= 0 && hitsWorm)
+            {
+                GameObject newBullet = Instantiate(bullet, new Vector3(this.transform.position.x, this.transform.position.y, 0), Quaternion.identity);
+                Bullet bulletBullet = newBullet.GetComponent<Bullet>();
+                bulletBullet.velocity = bulletSpeed * toWorm;
+                //bulletBullet.worm = this.worm;
+                attackTimer = attackDelay;
+            }
+            else
+            {
+                attackTimer -= Time.deltaTime;
+            }
         }
     }
 }

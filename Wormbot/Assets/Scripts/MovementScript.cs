@@ -213,6 +213,7 @@ public class MovementScript : MonoBehaviour
                         transform.localScale = transTarget.transform.localScale;
                         //gameObject.GetComponent<BoxCollider2D>().autoTiling
                         transTarget.GetComponent<SpriteRenderer>().enabled = false;
+                        transTarget.GetComponent<Robot>().captured = true;
 
 
                         gameObject.GetComponent<BoxCollider2D>().size = transTarget.GetComponent<BoxCollider2D>().size;

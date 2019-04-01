@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour
         lifetime = 0;
         lm = LayerMask.GetMask("Ground");
         rad = this.GetComponent<CircleCollider2D>().radius;
+        worm = GameObject.FindGameObjectWithTag("Player");
     }
 
     public void setVelocityRight() {
@@ -37,11 +38,16 @@ public class Bullet : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(this.transform.position, toWorm, rad);
         Debug.DrawLine(this.transform.position, (0.16f * toWorm) + this.transform.position, Color.white);
         if (hit == true && hit.collider.tag == "Player") {
+            // do worm hit here
             Destroy(this.gameObject);
         }
 
         // terrain collision
+        RaycastHit2D[] circCheck = Physics2D.CircleCastAll(this.transform.position, .5f * rad, this.transform.position + velocity,.5f * rad, lm);
 
+        if (circCheck.Length > 0) {
+            Destroy(this.gameObject);
+        }
 
     }
 }
