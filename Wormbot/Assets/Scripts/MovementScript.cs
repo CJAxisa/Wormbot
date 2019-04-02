@@ -32,13 +32,13 @@ public class MovementScript : MonoBehaviour
     private Vector2 walkVelocity;
     private Sprite startingSprite;
     private Vector2 startingScale;
+    private Animator test;
 
     private Vector2 startingColliderSize;
     private Vector2 startingColliderOffset;
 
-    private Vector3 leftScale;
-    private Vector3 rightScale;
-    
+
+
 
     void Start()
     {
@@ -48,20 +48,24 @@ public class MovementScript : MonoBehaviour
         jumpsLeft = numJumps;
         captured = false;
 
-
         distanceToGround = GetComponent<BoxCollider2D>().bounds.extents.y;
         lm = LayerMask.GetMask("Ground");
 
+        animator.SetTrigger("prepairingToJump");
+        animator.SetTrigger("jumping");
+        animator.SetTrigger("landed");
         startingSprite = gameObject.GetComponent<SpriteRenderer>().sprite;
         startingScale = transform.lossyScale;
+        
+        //
 
         setMovementStats(gameObject.GetComponent<MovementStats>());
         startingColliderSize = gameObject.GetComponent<BoxCollider2D>().size;
         startingColliderOffset = gameObject.GetComponent<BoxCollider2D>().offset;
 
-        leftScale = transform.localScale;
-        rightScale = transform.localScale;
-        rightScale.x *= -1;
+
+        //test = new Animator();
+        //AnimatorStateInfo temp =test.GetCurrentAnimatorStateInfo(0);
     }
 
     void Update()
@@ -69,7 +73,6 @@ public class MovementScript : MonoBehaviour
         if (Input.GetKey("d") && !Input.GetKey("a"))
         {
             walkVelocity = new Vector2(1f * moveSpeedMultiplier, 0f);
-            transform.localScale = rightScale;
             if (facingLeft)
                 facingLeft = false;
         }
@@ -77,7 +80,6 @@ public class MovementScript : MonoBehaviour
         {
             //rigidbody.AddForce(new Vector2((Mathf.Sin(wormyMotionTimer++) + 1f) * -5f, 0));
             walkVelocity = new Vector2(-1f * moveSpeedMultiplier, 0f);
-            transform.localScale = leftScale;
             if (!facingLeft)
                 facingLeft = true;
         }
@@ -113,12 +115,11 @@ public class MovementScript : MonoBehaviour
         if (Input.GetMouseButton(0) && jumpsLeft != 0)
         {
             Debug.DrawLine(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.cyan);
-            animator.SetBool("jumpPrep", true);
+            animator.SetTrigger("prepJump");
         }
 
         if (Input.GetMouseButtonUp(0) && jumpsLeft != 0)
         {
-            animator.SetBool("jumpPrep", false);
             jumpVel = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             jumpVel.z = 0f;
             if (jumpVel.magnitude > 6f)
@@ -155,6 +156,8 @@ public class MovementScript : MonoBehaviour
 
             jumpsLeft--;
             grounded = false;
+
+            animator.SetTrigger("jump");
         }
     }
 
@@ -211,6 +214,7 @@ public class MovementScript : MonoBehaviour
                         transform.localScale = transTarget.transform.localScale;
                         //gameObject.GetComponent<BoxCollider2D>().autoTiling
                         transTarget.GetComponent<SpriteRenderer>().enabled = false;
+                        transTarget.GetComponent<Robot>().captured = true;
 
 
                         gameObject.GetComponent<BoxCollider2D>().size = transTarget.GetComponent<BoxCollider2D>().size;
