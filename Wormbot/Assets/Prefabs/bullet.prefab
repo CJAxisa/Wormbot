@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: {x: -5, y: 0, z: 0}
-  worm: {fileID: 7146172220009013998, guid: 3a72e6b72d5f5b6438addcefba9858a0, type: 3}
+  worm: {fileID: 0}
   lifeSpan: 10
 --- !u!58 &7931455680266331495
 CircleCollider2D:
