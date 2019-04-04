@@ -36,6 +36,7 @@ public class MovementScript : MonoBehaviour
     private Vector2 startingColliderSize;
     private Vector2 startingColliderOffset;
 
+    private Vector3 wormScale;
     private Vector3 leftScale;
     private Vector3 rightScale;
     
@@ -59,6 +60,7 @@ public class MovementScript : MonoBehaviour
         startingColliderSize = gameObject.GetComponent<BoxCollider2D>().size;
         startingColliderOffset = gameObject.GetComponent<BoxCollider2D>().offset;
 
+        wormScale = transform.localScale;
         leftScale = transform.localScale;
         rightScale = transform.localScale;
         rightScale.x *= -1;
@@ -69,7 +71,7 @@ public class MovementScript : MonoBehaviour
         if (Input.GetKey("d") && !Input.GetKey("a"))
         {
             walkVelocity = new Vector2(1f * moveSpeedMultiplier, 0f);
-            transform.localScale = rightScale;
+            
             if (facingLeft)
                 facingLeft = false;
         }
@@ -77,7 +79,7 @@ public class MovementScript : MonoBehaviour
         {
             //rigidbody.AddForce(new Vector2((Mathf.Sin(wormyMotionTimer++) + 1f) * -5f, 0));
             walkVelocity = new Vector2(-1f * moveSpeedMultiplier, 0f);
-            transform.localScale = leftScale;
+            
             if (!facingLeft)
                 facingLeft = true;
         }
@@ -86,7 +88,6 @@ public class MovementScript : MonoBehaviour
             walkVelocity = Vector2.zero;
         }
 
-
         if (walkVelocity.x > maxWalkSpeed)
             walkVelocity = new Vector2(maxWalkSpeed, 0f);
         else if (walkVelocity.x < -1f * maxWalkSpeed)
@@ -94,6 +95,15 @@ public class MovementScript : MonoBehaviour
 
         if (Mathf.Abs(rigidbody.velocity.x) < maxWalkSpeed)
             rigidbody.velocity += walkVelocity;
+
+        if (facingLeft)
+        {
+            transform.localScale = leftScale;
+        }
+        else
+        {
+            transform.localScale = rightScale;
+        }
 
         groundCheck();
         jumpCheck();
@@ -113,6 +123,9 @@ public class MovementScript : MonoBehaviour
         if (Input.GetMouseButton(0) && jumpsLeft != 0)
         {
             Debug.DrawLine(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.cyan);
+
+            facingLeft = Camera.main.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x;
+
             animator.SetBool("jumpPrep", true);
         }
 
@@ -195,10 +208,17 @@ public class MovementScript : MonoBehaviour
             {
                 captured = false;
                 ejecting = true;
+
+                leftScale = wormScale;
+                rightScale = wormScale;
+                rightScale.x *= -1;
+
+                transTarget.GetComponent<SpriteRenderer>().enabled = true;
             }
             else
             {
                 foreach (RaycastHit2D hit in circCheck)
+                {
                     if (hit && hit.collider.tag == "CanCapture" && !captured)
                     {
                         Debug.Log("Captured fhella");
@@ -213,11 +233,17 @@ public class MovementScript : MonoBehaviour
                         transTarget.GetComponent<SpriteRenderer>().enabled = false;
                         transTarget.GetComponent<Robot>().captured = true;
 
-
                         gameObject.GetComponent<BoxCollider2D>().size = transTarget.GetComponent<BoxCollider2D>().size;
                         gameObject.GetComponent<BoxCollider2D>().offset = transTarget.GetComponent<BoxCollider2D>().offset;
                         distanceToGround = gameObject.GetComponent<BoxCollider2D>().bounds.extents.y;
+
+                        leftScale = transform.localScale;
+                        rightScale = transform.localScale;
+                        rightScale.x *= -1;
+
+                        break;
                     }
+                }
             }
             
         }
