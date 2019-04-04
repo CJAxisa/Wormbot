@@ -18,6 +18,7 @@ public class MovementScript : MonoBehaviour
     //[Range(0f, 3f)]
     public float maxWalkSpeed;
     public bool facingLeft;
+    public GameObject arrow;
     public bool grounded;
     public bool captured;
     public bool capturing;
@@ -128,11 +129,23 @@ public class MovementScript : MonoBehaviour
 
         if (Input.GetMouseButton(0) && jumpsLeft != 0)
         {
-            Debug.DrawLine(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.cyan);
+            arrow.GetComponent<SpriteRenderer>().enabled = true;
+
+            //Debug.DrawLine(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.cyan);
+            jumpVel = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            jumpVel.z = 0f;
+            //arrow.transform.forward = jumpVel;
+            //arrow.transform.rotation = arrow.transform.RotateAround()
+            arrow.transform.up = 5f*Vector3.RotateTowards(arrow.transform.up, Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position, 1f, 1f);
+            
 
             facingLeft = Camera.main.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x;
 
             animator.SetBool("jumpPrep", true);
+        }
+        else
+        {
+            arrow.GetComponent<SpriteRenderer>().enabled = false;
         }
 
         if (Input.GetMouseButtonUp(0) && jumpsLeft != 0)

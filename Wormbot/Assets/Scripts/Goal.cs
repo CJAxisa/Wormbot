@@ -22,7 +22,8 @@ public class Goal : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-
+            InvisibleWall.transform.position = new Vector3(-1000f, -1000f);
+            Destroy(this);
         }
     }
 }
