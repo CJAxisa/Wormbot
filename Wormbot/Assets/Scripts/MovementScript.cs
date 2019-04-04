@@ -56,7 +56,7 @@ public class MovementScript : MonoBehaviour
 
         animator.SetTrigger("prepairingToJump");
         animator.SetTrigger("jumping");
-        animator.SetTrigger("landed");
+        animator.SetTrigger("grounded");
         startingSprite = gameObject.GetComponent<SpriteRenderer>().sprite;
         startingScale = transform.lossyScale;
 
@@ -176,6 +176,7 @@ public class MovementScript : MonoBehaviour
 
             animator.SetTrigger("jump");
         }
+
     }
 
     private void abilityCheck()
@@ -213,6 +214,7 @@ public class MovementScript : MonoBehaviour
             //Debug.Log("did not hit ground");
             grounded = false;
         }
+        animator.SetBool("jumpPrep", false);
     }
 
 
