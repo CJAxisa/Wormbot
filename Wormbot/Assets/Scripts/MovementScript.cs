@@ -183,7 +183,7 @@ public class MovementScript : MonoBehaviour
 
         if (ability=="dash"&&Input.GetMouseButton(1))
         {
-            dashing == true;
+            dashing = true;
         }
 
         if (dashing)
