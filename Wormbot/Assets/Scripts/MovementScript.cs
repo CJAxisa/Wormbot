@@ -23,10 +23,11 @@ public class MovementScript : MonoBehaviour
     public bool capturing;
     public bool ejecting;
     public int numJumps;
-
+    public string ability;
     private const int CAPTURE_FRAMES = 60;
     private int captureFramesLeft=0;
     private GameObject transTarget;
+    private bool dashing;
 
     LayerMask lm;
     private Vector2 walkVelocity;
@@ -175,6 +176,21 @@ public class MovementScript : MonoBehaviour
 
             animator.SetTrigger("jump");
         }
+    }
+
+    private void abilityCheck()
+    {
+
+        if (ability=="dash"&&Input.GetMouseButton(1))
+        {
+            dashing == true;
+        }
+
+        if (dashing)
+        {
+
+        }
+            
     }
 
     /// <summary>
