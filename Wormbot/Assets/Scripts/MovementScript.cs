@@ -15,6 +15,8 @@ public class MovementScript : MonoBehaviour
     public float jumpVelMultiplier;
     [Range(0f, 5f)]
     public float moveSpeedMultiplier;
+    [Range(0f, 0.5f)]
+    public float tempo;
     //[Range(0f, 3f)]
     public float maxWalkSpeed;
     public bool facingLeft;
@@ -42,6 +44,9 @@ public class MovementScript : MonoBehaviour
     private Vector3 wormScale;
     private Vector3 leftScale;
     private Vector3 rightScale;
+
+
+
 
 
     void Start()
@@ -130,42 +135,80 @@ public class MovementScript : MonoBehaviour
         if (Input.GetMouseButton(0) && jumpsLeft != 0)
         {
             arrow.GetComponent<SpriteRenderer>().enabled = true;
+            Vector3 playerToMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            playerToMouse.z = 0;
+            float arrowMag = playerToMouse.magnitude;
+
 
             //Debug.DrawLine(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.cyan);
-            jumpVel = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            jumpVel.z = 0f;
             //arrow.transform.forward = jumpVel;
             //arrow.transform.rotation = arrow.transform.RotateAround()
-            arrow.transform.up = 5f*Vector3.RotateTowards(arrow.transform.up, Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position, 1f, 1f);
+            //arrow.transform.up =Vector3.RotateTowards(arrow.transform.up, Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position, 1f, 1f);
+
+            //Debug.Log("Distance Vector = " + playerToMouse + "\nMagnitude = " + playerToMouse.magnitude);
+
+
+            Vector3 arrowRot = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position);
+            arrowRot.z = 0;
+
+
+            arrow.transform.up = arrowRot;
+
+            
+
+            //makes sure that the arrow does not display past 6 units or less than 1 unit
+            if(arrowMag>=1f&&arrowMag<=6f)
+            {
+                arrow.transform.localScale = new Vector3(arrow.transform.localScale.x,
+                                                    arrowMag*0.8f,
+                                                    arrow.transform.localScale.z);
+            }
+            else if(arrowMag<1f)
+            {
+                arrow.transform.localScale = new Vector3(arrow.transform.localScale.x,
+                                                    1f,
+                                                    arrow.transform.localScale.z);
+                playerToMouse.Normalize();
+                arrowMag = 1f;
+            }
+            else
+            {
+                arrow.transform.localScale = new Vector3(arrow.transform.localScale.x,
+                                                    5f,
+                                                    arrow.transform.localScale.z);
+
+                playerToMouse = Vector3.ClampMagnitude(playerToMouse, 5f);
+                arrowMag = 5f;
+            }
             
 
             facingLeft = Camera.main.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x;
 
+            jumpVel = playerToMouse;
+            
+            
             animator.SetBool("jumpPrep", true);
         }
-        else
+        else if (jumpsLeft != 0 && Input.GetMouseButtonUp(0))       //on mouse let go  AKA actual jump physics
         {
-            arrow.GetComponent<SpriteRenderer>().enabled = false;
-        }
+            //jumpVel = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            //jumpVel.z = 0f;
+            //if (jumpVel.magnitude > 6f)
+            //{
+            //    jumpVel.Normalize();
+            //    jumpVel *= 6f;
+            //}
+            //else if (jumpVel.magnitude < 1f)
+            //{
+            //    jumpVel.Normalize();
+            //}
 
-        if (Input.GetMouseButtonUp(0) && jumpsLeft != 0)
-        {
-            jumpVel = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            jumpVel.z = 0f;
-            if (jumpVel.magnitude > 6f)
-            {
-                jumpVel.Normalize();
-                jumpVel *= 6f;
-            }
-            else if (jumpVel.magnitude < 1f)
-            {
-                jumpVel.Normalize();
-            }
+            //not deactivatin for a sec
 
             //Debug.Log("Original vector: " + (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position) + "\nNormalized Vel: " +jumpVel+"\n");
             if (jumpVel.magnitude >= maxWalkSpeed * 3.5f)
             {
-                jumpVel=Vector3.ClampMagnitude(jumpVel, maxWalkSpeed * 3.45f);
+                jumpVel = Vector3.ClampMagnitude(jumpVel, maxWalkSpeed * 3.45f);
             }
 
             jumpVel *= jumpVelMultiplier;
@@ -189,6 +232,12 @@ public class MovementScript : MonoBehaviour
 
             animator.SetTrigger("jump");
         }
+        else
+        {
+            arrow.GetComponent<SpriteRenderer>().enabled = false;
+        }
+
+        
 
     }
 
