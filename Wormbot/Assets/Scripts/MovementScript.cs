@@ -59,10 +59,7 @@ public class MovementScript : MonoBehaviour
 
         distanceToGround = GetComponent<BoxCollider2D>().bounds.extents.y;
         lm = LayerMask.GetMask("Ground");
-
-        animator.SetTrigger("prepairingToJump");
-        animator.SetTrigger("jumping");
-        animator.SetTrigger("grounded");
+        
         startingSprite = gameObject.GetComponent<SpriteRenderer>().sprite;
         startingScale = transform.lossyScale;
 
@@ -229,8 +226,6 @@ public class MovementScript : MonoBehaviour
 
             jumpsLeft--;
             grounded = false;
-
-            animator.SetTrigger("jump");
         }
         else
         {
@@ -325,7 +320,8 @@ public class MovementScript : MonoBehaviour
 
                         leftScale = transform.localScale;
                         rightScale = transform.localScale;
-                        rightScale.x *= -1;
+                        leftScale.x = Mathf.Abs(rightScale.x);
+                        rightScale.x = Mathf.Abs(rightScale.x) * -1;
 
                         break;
                     }
